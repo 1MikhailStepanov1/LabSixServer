@@ -3,10 +3,12 @@ package utility;
 import data.Position;
 import data.Worker;
 
+import java.lang.reflect.Array;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -24,6 +26,7 @@ public class CollectionManager {
 
     /**
      * Adds new worker to the collection
+     *
      * @param worker worker instance to be add
      */
     public void add(Worker worker) {
@@ -31,7 +34,7 @@ public class CollectionManager {
         collection.add(worker);
     }
 
-    public void addIfMax(Worker worker){
+    public void addIfMax(Worker worker) {
         try {
             ExeDone = true;
             Worker max;
@@ -49,7 +52,7 @@ public class CollectionManager {
         }
     }
 
-    public String countLessThanStartDate(String arg){
+    public String countLessThanStartDate(String arg) {
         ZonedDateTime tempTime = null;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.uuuu H:mm:ss z");
         try {
@@ -57,22 +60,19 @@ public class CollectionManager {
         } catch (DateTimeParseException exception) {
             System.out.println(exception.getMessage());
         }
+        ArrayList<Worker> tempCollection = null;
         String result = "";
-        int count = 0;
         if (collection.size() > 0) {
-            for (Worker worker : collection) {
-                if (worker.getStartDate().compareTo(tempTime) < 0) {
-                    count++;
-                }
-            }
-            result = "Result: " + count;
+            ZonedDateTime finalTempTime = tempTime;
+            tempCollection = collection.stream().filter((worker) -> worker.getStartDate().compareTo(finalTempTime) < 0).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+            result = "Result: " + tempCollection.size();
         } else {
             result = "Collection is empty.";
         }
         return result;
     }
 
-    public ArrayList<Worker> filterGreaterThanStartDate(String arg){
+    public ArrayList<Worker> filterGreaterThanStartDate(String arg) {
         ZonedDateTime tempTime = null;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.uuuu H:mm:ss z");
         try {
@@ -80,40 +80,25 @@ public class CollectionManager {
         } catch (DateTimeParseException exception) {
             System.out.println(exception.getMessage());
         }
-        ArrayList<Worker> result = new ArrayList<>();
+        ArrayList<Worker> result = null;
         if (collection.size() > 0) {
-            for (Worker tempWorker : collection) {
-                if (tempWorker.getStartDate().compareTo(tempTime) > 0) {
-                    result.add(tempWorker);
-                }
-            }
-        } else {
-            result = null;
+            ZonedDateTime finalTempTime = tempTime;
+            result = collection.stream().filter((worker) -> worker.getStartDate().compareTo(finalTempTime) > 0).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+            return result;
         }
         return result;
     }
 
-    public String groupCountingByPosition(){
-        String result = null;
-        EnumMap<Position, Integer> enumMap = new EnumMap<>(Position.class);
-        int s;
-        enumMap.put(Position.MANAGER, 0);
-        enumMap.put(Position.LABORER, 0);
-        enumMap.put(Position.LEAD_DEVELOPER, 0);
-        enumMap.put(Position.BAKER, 0);
-        enumMap.put(Position.MANAGER_OF_CLEANING, 0);
-        for (Worker worker : collection) {
-            s = enumMap.get(worker.getPosition());
-            s++;
-            enumMap.put(worker.getPosition(), s);
+    public String groupCountingByPosition() {
+        StringBuilder result = null;
+        Map<data.Position, Long> answer = collection.stream().collect(Collectors.groupingBy(Worker::getPosition, Collectors.counting()));
+        for (Map.Entry<Position, Long> entry : answer.entrySet()) {
+            result.append(entry.getKey().toString()).append(" - ").append(entry.getValue());
         }
-        for (Map.Entry<Position, Integer> entry : enumMap.entrySet()) {
-            result += entry.getKey() + " - " + entry.getValue();
-        }
-        return result;
+        return result.toString();
     }
 
-    public void removeById(Long id){
+    public void removeById(Long id) {
         collection.removeIf(worker -> worker.getId() == id);
     }
 
@@ -143,7 +128,7 @@ public class CollectionManager {
         return collection.stream().sorted(Comparator.comparing(Worker::getName)).collect(LinkedList::new, LinkedList::add, LinkedList::addAll);
     }
 
-    public void update (Long id, Worker worker){
+    public void update(Long id, Worker worker) {
         collection.forEach(worker1 -> {
             if (worker1.getId() == id) {
                 worker1.setName(worker.getName());
@@ -215,17 +200,20 @@ public class CollectionManager {
     public LinkedList<Worker> getCollection() {
         return new LinkedList<>(collection);
     }
-    public void setCollection(LinkedList col){collection = (LinkedList<Worker>) col;}
+
+    public void setCollection(LinkedList col) {
+        collection = (LinkedList<Worker>) col;
+    }
 
     /**
      * Load collection from indicated file
+     *
      * @param collectionFromFile external collection of worker instances
      */
     public void load(Collection<Worker> collectionFromFile) {
         collection.addAll(collectionFromFile);
         ExeDone = true;
     }
-
 
 
 }

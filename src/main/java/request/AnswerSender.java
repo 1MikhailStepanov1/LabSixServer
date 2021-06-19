@@ -9,12 +9,12 @@ import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketAddress;
-import java.util.Comparator;
 import java.util.LinkedList;
 
 public class AnswerSender {
     private final Logger logger;
-    private LinkedList<Serialization> answer = new LinkedList<>();
+    private LinkedList<Serialization> answerLine = new LinkedList<>();
+    private LinkedList<Serialization> answerWorker = new LinkedList<>();
     private SocketAddress socketAddress;
     private final DatagramSocket datagramSocket = null;
 
@@ -26,24 +26,32 @@ public class AnswerSender {
         this.socketAddress = socketAddress;
     }
 
-    public void addToAnswer(Object object) {
-        Serialization temp = new Serialization("Empty");
-        if (object instanceof String) {
-            temp = new Serialization((String) object);
+    public void addToAnswer(String line) {
+        if (!line.equals("")){
+            answerLine.add(new Serialization(line));
         }
-        if (object instanceof Worker) {
-            temp = new Serialization((Worker) object);
+    }
+    public void addToAnswer(Worker worker) {
+        if (worker != null){
+            answerWorker.add(new Serialization(worker));
         }
-        answer.add(temp);
     }
 
-    public void sendAnswer() {
-        if (answer.isEmpty()) {
+    public void sendAnswerWorkers() {
+        if (answerWorker.isEmpty()) {
             return;
         }
-        if (answer.peek().getData() instanceof Worker) {
-            answer.sort(Comparator.comparing((Serialization worker) -> worker.getWorker().getName()));
+        sending(answerWorker);
+        answerWorker.clear();
+    }
+    public void sendAnswerLine() {
+        if (answerLine.isEmpty()) {
+            return;
         }
+        sending(answerLine);
+        answerLine.clear();
+    }
+    private void sending(LinkedList<Serialization> answer){
         try {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
@@ -56,6 +64,5 @@ public class AnswerSender {
         } catch (IOException exception) {
             logger.info("Failed sending answer." + exception.getMessage() + exception.getCause());
         }
-        answer.clear();
     }
 }

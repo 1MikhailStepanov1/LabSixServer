@@ -7,6 +7,7 @@ import request.AnswerSender;
 import request.RequestAcceptor;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class Receiver {
     private static final Logger logger = LoggerFactory.getLogger(RequestAcceptor.class);
@@ -28,7 +29,7 @@ public class Receiver {
             answerSender.addToAnswer("Received worker haven't passed validation.");
         }
         logger.info("Result of command \"add\" has been sent to client.");
-        answerSender.sendAnswer();
+        answerSender.sendAnswerLine();
     }
 
     public void addIfMax(){
@@ -40,39 +41,40 @@ public class Receiver {
             answerSender.addToAnswer("Received worker haven't passed validation.");
         }
         logger.info("Result of command \"add_if_max\" has been sent to client.");
-        answerSender.sendAnswer();
+        answerSender.sendAnswerLine();
     }
 
     public void clear(){
         collectionManager.clear();
         answerSender.addToAnswer("Collection has been cleared.");
         logger.info("Result of command \"clear\" has been sent to client.");
-        answerSender.sendAnswer();
+        answerSender.sendAnswerLine();
     }
 
     public void countLessThanStartDate(String arg){
         String answer = collectionManager.countLessThanStartDate(arg);
         answerSender.addToAnswer(answer);
         logger.info("Result of command \"count_less_than_start_date\" has been sent to client.");
-        answerSender.sendAnswer();
+        answerSender.sendAnswerLine();
     }
 
     public void filterGreaterThanStartDate(String arg){
         ArrayList<Worker> answer = collectionManager.filterGreaterThanStartDate(arg);
+        answer.sort(Comparator.comparing(Worker::getName));
         if (answer == null) {
             answerSender.addToAnswer("Collection doesn't contains satisfying elements.");
         } else {
             answer.forEach(answerSender::addToAnswer);
         }
         logger.info("Result of command \"filter_greater_than_start_date\" has been sent to client.");
-        answerSender.sendAnswer();
+        answerSender.sendAnswerWorkers();
     }
 
     public void groupCountingByPosition(){
         String answer = collectionManager.groupCountingByPosition();
         answerSender.addToAnswer(answer);
         logger.info("Result of command \"group_counting_by_position\" has been sent to client.");
-        answerSender.sendAnswer();
+        answerSender.sendAnswerLine();
     }
 
     public void info(){
@@ -81,7 +83,7 @@ public class Receiver {
             answerSender.addToAnswer(answer[i]);
         }
         logger.info("Result of command \"info\" has been sent to client.");
-        answerSender.sendAnswer();
+        answerSender.sendAnswerLine();
     }
 
     public void removeById(String arg){
@@ -98,7 +100,7 @@ public class Receiver {
             System.out.println(exception.getMessage());
         }
         logger.info("Result of command \"remove_by_id\" has been sent to client.");
-        answerSender.sendAnswer();
+        answerSender.sendAnswerLine();
     }
 
     public void removeGreater(){
@@ -113,7 +115,7 @@ public class Receiver {
             answerSender.addToAnswer("Received element don`t pass validation.");
         }
         logger.info("Result of command \"remove_greater\" has been sent to client.");
-        answerSender.sendAnswer();
+        answerSender.sendAnswerLine();
     }
 
     public void removeLower(){
@@ -128,13 +130,13 @@ public class Receiver {
             answerSender.addToAnswer("Received element don`t pass validation.");
         }
         logger.info("Result of command \"remove_lower\" has been sent to client.");
-        answerSender.sendAnswer();
+        answerSender.sendAnswerLine();
     }
 
     public void show(){
-        answerSender.addToAnswer(collectionManager.show());
+        collectionManager.show().stream().sorted(Comparator.comparing(Worker::getName)).forEach(answerSender::addToAnswer);
         logger.info("Result of command \"show\" has been sent to client.");
-        answerSender.sendAnswer();
+        answerSender.sendAnswerWorkers();
     }
 
     public void update(String arg){
@@ -156,6 +158,6 @@ public class Receiver {
             answerSender.addToAnswer("Command is incorrect.");
         }
         logger.info("Result of command \"update\" has been sent to client.");
-        answerSender.sendAnswer();
+        answerSender.sendAnswerLine();
     }
 }

@@ -8,7 +8,8 @@ public class Serialization implements Serializable {
     private String command;
     private String arg;
     private Worker worker;
-    private Object data;
+    private String dataLine;
+    private Worker dataWorker;
 
     public Serialization(String command, String arg, Worker worker){
         this.command = command;
@@ -17,14 +18,17 @@ public class Serialization implements Serializable {
     }
 
     public Serialization(String line){
-        data = line;
+        dataLine = line;
     }
     public Serialization(Worker worker){
-        data = worker;
+        dataWorker = worker;
     }
 
-    public Object getData(){
-        return data;
+    public String getDataLine(){
+        return dataLine;
+    }
+    public Worker getDataWorker(){
+        return dataWorker;
     }
 
     public String getCommand(){
