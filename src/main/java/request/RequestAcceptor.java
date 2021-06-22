@@ -30,7 +30,7 @@ public class RequestAcceptor {
             Object raw;
             String command;
             String arg;
-            Serialization clientRequest = null;
+            SerializationFromClient clientRequest = null;
             try {
                 DatagramPacket datagramPacket = new DatagramPacket(acceptedRequest, acceptedRequest.length);
                 datagramSocket.receive(datagramPacket);
@@ -42,8 +42,8 @@ public class RequestAcceptor {
                 return;
             }
             answerSender.setSocketAddress(socketAddress);
-            if (raw instanceof Serialization) {
-                clientRequest = (Serialization) raw;
+            if (raw instanceof SerializationFromClient) {
+                clientRequest = (SerializationFromClient) raw;
                 logger.info("Received command: " + clientRequest.toString());
             }
             if (clientRequest != null) {

@@ -13,8 +13,7 @@ import java.util.LinkedList;
 
 public class AnswerSender {
     private final Logger logger;
-    private LinkedList<Serialization> answerLine = new LinkedList<>();
-    private LinkedList<Serialization> answerWorker = new LinkedList<>();
+    private SerializationForClient answer = null;
     private SocketAddress socketAddress;
     private final DatagramSocket datagramSocket = null;
 
@@ -26,32 +25,18 @@ public class AnswerSender {
         this.socketAddress = socketAddress;
     }
 
-    public void addToAnswer(String line) {
-        if (!line.equals("")){
-            answerLine.add(new Serialization(line));
-        }
-    }
-    public void addToAnswer(Worker worker) {
-        if (worker != null){
-            answerWorker.add(new Serialization(worker));
-        }
+    public void addToAnswer(boolean status, String message, Integer count, LinkedList<Worker> workers) {
+        answer.setStatus(status);
+        answer.setMessage(message);
+        answer.setCount(count);
+        answer.setWorkers(workers);
     }
 
-    public void sendAnswerWorkers() {
-        if (answerWorker.isEmpty()) {
+
+    public void sendAnswer(){
+        if (answer == null){
             return;
         }
-        sending(answerWorker);
-        answerWorker.clear();
-    }
-    public void sendAnswerLine() {
-        if (answerLine.isEmpty()) {
-            return;
-        }
-        sending(answerLine);
-        answerLine.clear();
-    }
-    private void sending(LinkedList<Serialization> answer){
         try {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
@@ -64,5 +49,6 @@ public class AnswerSender {
         } catch (IOException exception) {
             logger.info("Failed sending answer." + exception.getMessage() + exception.getCause());
         }
+        answer = null;
     }
 }

@@ -14,7 +14,7 @@ public class CollectionValidator {
 
     public static boolean validateObject(Worker worker){
         boolean temp = false;
-        if (!worker.getName().equals("") && worker.getName() != null && worker.getCoordinates().getX() <= 768 && worker.getCoordinates().getY() != null && worker.getSalary() > 0 && worker.getStartDate() != null && checkExistPosition(worker.getPosition().toString()) && (worker.getPerson() == null || (worker.getPerson().getHeight()>0 && worker.getPerson().getWeight() >0))){
+        if (!worker.getName().equals("") && worker.getName() != null && worker.getCoordinates().getCoordinateX() <= 768 && worker.getCoordinates().getCoordinateY() != null && worker.getSalary() > 0 && worker.getStartDate() != null && checkExistPosition(worker.getPosition().toString()) && (worker.getPerson() == null || (worker.getPerson().getHeight()>0 && worker.getPerson().getWeight() >0))){
             temp = true;
         }
         return temp;

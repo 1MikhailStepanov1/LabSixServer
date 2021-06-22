@@ -1,5 +1,9 @@
 package data;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
+
+@XmlType(propOrder = {"height", "weight"})
 public class Person {
     private Long height; //Поле может быть null, Значение поля должно быть больше 0
     private Integer weight; //Поле может быть null, Значение поля должно быть больше 0
@@ -8,7 +12,14 @@ public class Person {
         this.height = height;
         this.weight = weight;
     }
-
+    @XmlElement(name = "height")
+    public void setHeight(Long height){
+        this.height = height;
+    }
+    @XmlElement(name = "weight")
+    public void setWeight(Integer weight){
+        this.weight = weight;
+    }
     public Long getHeight() {
         return height;
     }

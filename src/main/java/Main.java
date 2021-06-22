@@ -10,20 +10,23 @@ import java.io.IOException;
 import java.net.*;
 
 public class Main {
+    private static final CollectionManager collectionManager = new CollectionManager();
+
     static {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            FileWorker fileWorker = new FileWorker();
+            FileWorker fileWorker = new FileWorker(collectionManager);
             fileWorker.getToXmlFormat(fileWorker.getFilePath());
         }));
     }
 
     public static void main(String[] args) {
         DatagramSocket datagramSocket;
-        FileWorker fileWorker = new FileWorker();
+        CollectionManager collectionManager = Main.collectionManager;
+        FileWorker fileWorker = new FileWorker(collectionManager);
         int port = 9898;
         try {
             if (args.length > 1) {
-                fileWorker.parse(args[0]);
+                collectionManager.setCollection(fileWorker.parse(args[0]));
                 port = Integer.parseInt(args[1]);
             }
         } catch (NumberFormatException exception) {
@@ -45,7 +48,8 @@ public class Main {
         AnswerSender answerSender = new AnswerSender(logger);
         answerSender.setSocketAddress(datagramSocket.getLocalSocketAddress());
         WorkerFactory workerFactory = new WorkerFactory();
-        Invoker invoker = new Invoker();
+        Receiver receiver = new Receiver(collectionManager);
+        Invoker invoker = new Invoker(receiver);
         invoker.initMap();
         RequestAcceptor requestAcceptor = new RequestAcceptor(workerFactory, logger, invoker, answerSender);
         requestAcceptor.acceptRequest(datagramSocket, datagramSocket.getLocalSocketAddress());

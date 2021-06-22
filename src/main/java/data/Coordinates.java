@@ -1,5 +1,9 @@
 package data;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
+
+@XmlType(propOrder = {"coordinateX", "coordinateY"})
 public class Coordinates {
     private long x; //Максимальное значение поля: 768
     private Integer y; //Поле не может быть null
@@ -8,12 +12,20 @@ public class Coordinates {
         this.x = x;
         this.y = y;
     }
-
-    public long getX() {
+    @XmlElement(name = "coordinateX")
+    public void setCoordinateX(long x){
+        this.x = x;
+    }
+    @XmlElement(name = "coordinateY")
+    public void setCoordinateY(Integer y){
+        this.y = y;
+    }
+    public long getCoordinateX() {
         return x;
     }
 
-    public Integer getY() {
+    public Integer getCoordinateY() {
         return y;
     }
+
 }

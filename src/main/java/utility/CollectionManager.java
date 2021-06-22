@@ -3,7 +3,8 @@ package utility;
 import data.Position;
 import data.Worker;
 
-import java.lang.reflect.Array;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -14,14 +15,13 @@ import java.util.stream.Collectors;
 /**
  * This class is used to do all operations with collection
  */
+@XmlRootElement(name = "workers")
 public class CollectionManager {
-    private LinkedList<Worker> collection;
+    private LinkedList<Worker> collection = new LinkedList<>();
     private boolean ExeDone;
-    private final ZonedDateTime InitTime;
+    private final ZonedDateTime InitTime = ZonedDateTime.now();
 
     public CollectionManager() {
-        collection = new LinkedList<>();
-        InitTime = ZonedDateTime.now();
     }
 
     /**
@@ -52,7 +52,7 @@ public class CollectionManager {
         }
     }
 
-    public String countLessThanStartDate(String arg) {
+    public Integer countLessThanStartDate(String arg) {
         ZonedDateTime tempTime = null;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.uuuu H:mm:ss z");
         try {
@@ -61,18 +61,18 @@ public class CollectionManager {
             System.out.println(exception.getMessage());
         }
         ArrayList<Worker> tempCollection = null;
-        String result = "";
+        Integer result;
         if (collection.size() > 0) {
             ZonedDateTime finalTempTime = tempTime;
             tempCollection = collection.stream().filter((worker) -> worker.getStartDate().compareTo(finalTempTime) < 0).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
-            result = "Result: " + tempCollection.size();
+            result = tempCollection.size();
         } else {
-            result = "Collection is empty.";
+            result = null;
         }
         return result;
     }
 
-    public ArrayList<Worker> filterGreaterThanStartDate(String arg) {
+    public LinkedList<Worker> filterGreaterThanStartDate(String arg) {
         ZonedDateTime tempTime = null;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.uuuu H:mm:ss z");
         try {
@@ -80,10 +80,10 @@ public class CollectionManager {
         } catch (DateTimeParseException exception) {
             System.out.println(exception.getMessage());
         }
-        ArrayList<Worker> result = null;
+        LinkedList<Worker> result = null;
         if (collection.size() > 0) {
             ZonedDateTime finalTempTime = tempTime;
-            result = collection.stream().filter((worker) -> worker.getStartDate().compareTo(finalTempTime) > 0).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+            result = collection.stream().filter((worker) -> worker.getStartDate().compareTo(finalTempTime) > 0).collect(LinkedList::new, LinkedList::add, LinkedList::addAll);
             return result;
         }
         return result;
@@ -181,28 +181,31 @@ public class CollectionManager {
     /**
      * @return string array with information about collection
      */
-    public String[] getInfo() {
-        String Type = "Type: Collection of worker's type objects";
-        String Init = "Initialization time: " + InitTime.toString();
-        String Size = "Number of elements: " + collection.size();
+    public String getInfo() {
+        String Type = "Type: Collection of worker's type objects\n";
+        String Init = "Initialization time: " + InitTime.toString() + "\n";
+        String Size = "Number of elements: " + collection.size()+ "\n";
         String State;
         if (exeDone()) {
             State = "Collection has been modified.";
         } else {
             State = "Collection hasn't been modified yet.";
         }
-        return new String[]{Type, Init, Size, State};
+        StringBuilder result = null;
+        result.append(Type).append(Init).append(Size).append(State);
+        return String.valueOf(result);
     }
 
     /**
      * @return copy collection with workers
      */
     public LinkedList<Worker> getCollection() {
-        return new LinkedList<>(collection);
+        return collection;
     }
 
-    public void setCollection(LinkedList col) {
-        collection = (LinkedList<Worker>) col;
+    @XmlElement(name = "worker")
+    public void setCollection(LinkedList<Worker> collection) {
+        this.collection = collection;
     }
 
     /**
@@ -212,7 +215,6 @@ public class CollectionManager {
      */
     public void load(Collection<Worker> collectionFromFile) {
         collection.addAll(collectionFromFile);
-        ExeDone = true;
     }
 
 

@@ -10,27 +10,29 @@ import java.util.HashMap;
  */
 public class Invoker {
     private final HashMap<String, CommandInterface> commands;
+    private final Receiver receiver;
 
-    public Invoker() {
+    public Invoker(Receiver receiver) {
         commands = new HashMap<>();
+        this.receiver = receiver;
     }
 
     /**
      * Initialize commands map
      */
     public void initMap() {
-        commands.put("info", new Info());
-        commands.put("show", new Show());
-        commands.put("add", new Add());
-        commands.put("update", new Update());
-        commands.put("remove_by_id", new RemoveById());
-        commands.put("clear", new Clear());
-        commands.put("add_if_max", new AddIfMax());
-        commands.put("remove_greater", new RemoveGreater());
-        commands.put("remove_lower", new RemoveLower());
-        commands.put("group_counting_by_position", new GroupCountingByPosition());
-        commands.put("count_less_than_start_date", new CountLessThanStartDate());
-        commands.put("filter_greater_than_start_date", new FilterGreaterThanStartDate());
+        commands.put("info", new Info(receiver));
+        commands.put("show", new Show(receiver));
+        commands.put("add", new Add(receiver));
+        commands.put("update", new Update(receiver));
+        commands.put("remove_by_id", new RemoveById(receiver));
+        commands.put("clear", new Clear(receiver));
+        commands.put("add_if_max", new AddIfMax(receiver));
+        commands.put("remove_greater", new RemoveGreater(receiver));
+        commands.put("remove_lower", new RemoveLower(receiver));
+        commands.put("group_counting_by_position", new GroupCountingByPosition(receiver));
+        commands.put("count_less_than_start_date", new CountLessThanStartDate(receiver));
+        commands.put("filter_greater_than_start_date", new FilterGreaterThanStartDate(receiver));
     }
 
     public void exe(String name, String arg) {
