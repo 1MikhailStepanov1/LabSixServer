@@ -11,21 +11,21 @@ import java.net.*;
 
 public class Main {
     private static final CollectionManager collectionManager = new CollectionManager();
+    private static final FileWorker fileWorker = new FileWorker(collectionManager);
 
     static {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            FileWorker fileWorker = new FileWorker(collectionManager);
-            fileWorker.getToXmlFormat(fileWorker.getFilePath());
+            fileWorker.getToXmlFormat(collectionManager.getPath());
         }));
     }
 
     public static void main(String[] args) {
         DatagramSocket datagramSocket;
-        CollectionManager collectionManager = Main.collectionManager;
         FileWorker fileWorker = new FileWorker(collectionManager);
         int port = 9898;
         try {
             if (args.length > 1) {
+                collectionManager.setPath(args[0]);
                 collectionManager.setCollection(fileWorker.parse(args[0]));
                 port = Integer.parseInt(args[1]);
             }

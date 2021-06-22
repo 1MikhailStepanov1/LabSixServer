@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 public class CollectionManager {
     private LinkedList<Worker> collection = new LinkedList<>();
     private boolean ExeDone;
+    private String path;
     private final ZonedDateTime InitTime = ZonedDateTime.now();
 
     public CollectionManager() {
@@ -215,6 +216,13 @@ public class CollectionManager {
      */
     public void load(Collection<Worker> collectionFromFile) {
         collection.addAll(collectionFromFile);
+    }
+
+    public void setPath(String path){
+        this.path = path;
+    }
+    public String getPath(){
+        return path;
     }
 
 
