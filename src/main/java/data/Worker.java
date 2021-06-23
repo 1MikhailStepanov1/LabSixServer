@@ -1,9 +1,6 @@
 package data;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlType;
 import java.time.ZonedDateTime;
-@XmlType(propOrder = {"id", "name", "coordinates", "creationDate", "salary", "startDate", "endDate", "position", "person"})
 public class Worker implements Comparable<Worker> {
     private Long id; //Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private String name; //Поле не может быть null, Строка не может быть пустой
@@ -96,39 +93,39 @@ public class Worker implements Comparable<Worker> {
         info += "\nPerson: " + person;
         return info;
     }
-    @XmlElement
+
     public void setId(Long id){
         this.id = id;
     }
-    @XmlElement
+
     public void setName(String name) {
         this.name = name;
     }
-    @XmlElement
+
     public void setCoordinates(Coordinates coordinates) {
         this.coordinates = coordinates;
     }
-    @XmlElement
-    public void setCreationDate(ZonedDateTime creationDate){
+
+    public void setCreationDate(ZonedDateTime creationDate) {
         this.creationDate = creationDate;
     }
-    @XmlElement
+
     public void setSalary(double salary) {
         this.salary = salary;
     }
-    @XmlElement
+
     public void setStartDate(ZonedDateTime startDate) {
         this.startDate = startDate;
     }
-    @XmlElement
+
     public void setEndDate(ZonedDateTime endDate) {
         this.endDate = endDate;
     }
-    @XmlElement
+
     public void setPosition(Position position) {
         this.position = position;
     }
-    @XmlElement
+
     public void setPerson(Person person) {
         this.person = person;
     }

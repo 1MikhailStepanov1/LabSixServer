@@ -133,7 +133,7 @@ public class Receiver {
     }
 
     public void show() {
-        answerSender.addToAnswer(true, "", null, collectionManager.show());
+        answerSender.addToAnswer(true, null, null, collectionManager.show());
         logger.info("Result of command \"show\" has been sent to client.");
         answerSender.sendAnswer();
     }

@@ -13,7 +13,7 @@ import java.util.LinkedList;
 
 public class AnswerSender {
     private final Logger logger;
-    private SerializationForClient answer = null;
+    private SerializationForClient answer = new SerializationForClient(false, null, null,null);
     private SocketAddress socketAddress;
     private final DatagramSocket datagramSocket = null;
 

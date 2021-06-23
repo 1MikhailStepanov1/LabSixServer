@@ -1,8 +1,7 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <collection>
     <worker>
         <id>1</id>
-        <name>Vasya</name>
         <coordinates>
             <coordinateX>767</coordinateX>
             <coordinateY>505</coordinateY>
@@ -10,45 +9,43 @@
         <creationDate>2020-01-12T11:30:52+03:00</creationDate>
         <salary>0.5</salary>
         <startDate>2020-12-11T11:50:20+03:00</startDate>
-        <endDate></endDate>
+        <endDate>null</endDate>
         <position>BAKER</position>
         <person>
             <height>193</height>
             <weight>85</weight>
         </person>
     </worker>
-<worker>
-    <id>2</id>
-    <name>Petya</name>
-    <coordinates>
-        <coordinateX>555</coordinateX>
-        <coordinateY>9229</coordinateY>
-    </coordinates>
-    <creationDate>2020-01-12T11:30:52+03:00</creationDate>
-    <salary>6660.5</salary>
-    <startDate>2021-01-16T11:30+03:00</startDate>
-    <endDate>2022-02-18T12:00+03:00</endDate>
-    <position>LEAD_DEVELOPER</position>
-    <person>
-        <height>555</height>
-        <weight>88</weight>
-    </person>
-</worker>
-<worker>
-    <id>3</id>
-    <name>Zhenya</name>
-    <coordinates>
-        <coordinateX>555</coordinateX>
-        <coordinateY>666</coordinateY>
-    </coordinates>
-    <creationDate>2021-03-29T13:21:17.025+03:00[Europe/Moscow]</creationDate>
-    <salary>35000.0</salary>
-    <startDate>2020-12-12T11:50:30+03:00</startDate>
-    <endDate>2021-12-12T11:52:30+03:00</endDate>
-    <position>MANAGER</position>
-    <person>
-        <height>184</height>
-        <weight>75</weight>
-    </person>
-</worker>
+    <worker>
+        <id>2</id>
+        <coordinates>
+            <coordinateX>555</coordinateX>
+            <coordinateY>9229</coordinateY>
+        </coordinates>
+        <creationDate>2020-01-12T11:30:52+03:00</creationDate>
+        <salary>6660.5</salary>
+        <startDate>2021-01-16T11:30+03:00</startDate>
+        <endDate>2022-02-18T12:00+03:00</endDate>
+        <position>LEAD_DEVELOPER</position>
+        <person>
+            <height>555</height>
+            <weight>88</weight>
+        </person>
+    </worker>
+    <worker>
+        <id>3</id>
+        <coordinates>
+            <coordinateX>555</coordinateX>
+            <coordinateY>666</coordinateY>
+        </coordinates>
+        <creationDate>2021-03-29T13:21:17.025+03:00[Europe/Moscow]</creationDate>
+        <salary>35000.0</salary>
+        <startDate>2020-12-12T11:50:30+03:00</startDate>
+        <endDate>2021-12-12T11:52:30+03:00</endDate>
+        <position>MANAGER</position>
+        <person>
+            <height>184</height>
+            <weight>75</weight>
+        </person>
+    </worker>
 </collection>

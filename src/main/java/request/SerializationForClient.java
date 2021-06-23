@@ -11,7 +11,7 @@ public class SerializationForClient implements Serializable {
     private Integer count;
     private LinkedList<Worker> workers;
 
-    public SerializationForClient(boolean status, String message, int count, LinkedList<Worker> workers) {
+    public SerializationForClient(boolean status, String message, Integer count, LinkedList<Worker> workers) {
         this.status = status;
         this.message = message;
         this.count = count;

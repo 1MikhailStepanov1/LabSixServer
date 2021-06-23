@@ -3,8 +3,6 @@ package utility;
 import data.Position;
 import data.Worker;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -15,7 +13,7 @@ import java.util.stream.Collectors;
 /**
  * This class is used to do all operations with collection
  */
-@XmlRootElement(name = "workers")
+
 public class CollectionManager {
     private LinkedList<Worker> collection = new LinkedList<>();
     private boolean ExeDone;
@@ -204,7 +202,6 @@ public class CollectionManager {
         return collection;
     }
 
-    @XmlElement(name = "worker")
     public void setCollection(LinkedList<Worker> collection) {
         this.collection = collection;
     }

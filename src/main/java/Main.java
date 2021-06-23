@@ -10,22 +10,26 @@ import java.io.IOException;
 import java.net.*;
 
 public class Main {
-    private static final CollectionManager collectionManager = new CollectionManager();
-    private static final FileWorker fileWorker = new FileWorker(collectionManager);
-
-    static {
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            fileWorker.getToXmlFormat(collectionManager.getPath());
-        }));
-    }
+//
+//    static {
+//        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+//            fileWorker.getToXmlFormat(collectionManager.getPath());
+//        }));
+//    }
 
     public static void main(String[] args) {
         DatagramSocket datagramSocket;
+        CollectionManager collectionManager = new CollectionManager();
         FileWorker fileWorker = new FileWorker(collectionManager);
         int port = 9898;
         try {
             if (args.length > 1) {
+                if (args[0] == null) {
+                    System.out.println("File path wasn't identified. Please, correct your input and try again.");
+                    return;
+                }
                 collectionManager.setPath(args[0]);
+                fileWorker.setFilePath(args[1]);
                 collectionManager.setCollection(fileWorker.parse(args[0]));
                 port = Integer.parseInt(args[1]);
             }
@@ -34,14 +38,18 @@ public class Main {
         } catch (IOException | ParserConfigurationException | SAXException exception) {
             System.out.println("File can't be read.");
         }
+        {
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                fileWorker.getToXmlFormat(fileWorker.getFilePath());
+            }));
+        }
         if (port == 9898) {
             System.out.println("Port hasn't been identified. " + port + " will be used.");
         }
         try {
             datagramSocket = new DatagramSocket(port);
         } catch (SocketException e) {
-            System.out.println("Failed creating socket.");
-            e.printStackTrace();
+            System.out.println("Failed creating socket. Socket is already used.");
             return;
         }
         Logger logger = LoggerFactory.getLogger("Server");
