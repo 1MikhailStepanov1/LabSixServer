@@ -7,15 +7,13 @@ import utility.*;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.net.*;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 
 public class Main {
-//
-//    static {
-//        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-//            fileWorker.getToXmlFormat(collectionManager.getPath());
-//        }));
-//    }
+
 
     public static void main(String[] args) {
         DatagramSocket datagramSocket;
@@ -24,14 +22,15 @@ public class Main {
         int port = 9898;
         try {
             if (args.length > 1) {
-                if (args[0] == null) {
-                    System.out.println("File path wasn't identified. Please, correct your input and try again.");
-                    return;
-                }
-                collectionManager.setPath(args[0]);
-                fileWorker.setFilePath(args[1]);
+                fileWorker.setFilePath(args[0]);
                 collectionManager.setCollection(fileWorker.parse(args[0]));
                 port = Integer.parseInt(args[1]);
+            } else if (args.length == 1) {
+                fileWorker.setFilePath(args[0]);
+                collectionManager.setCollection(fileWorker.parse(args[0]));
+            } else {
+                System.out.println("Incorrect command line arguments. Please, follow the format: \"file_path port\".");
+                return;
             }
         } catch (NumberFormatException exception) {
             System.out.println("Incorrect format of port.");
@@ -39,9 +38,7 @@ public class Main {
             System.out.println("File can't be read.");
         }
         {
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                fileWorker.getToXmlFormat(fileWorker.getFilePath());
-            }));
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> fileWorker.getToXmlFormat(fileWorker.getFilePath())));
         }
         if (port == 9898) {
             System.out.println("Port hasn't been identified. " + port + " will be used.");
@@ -54,13 +51,15 @@ public class Main {
         }
         Logger logger = LoggerFactory.getLogger("Server");
         AnswerSender answerSender = new AnswerSender(logger);
+        System.out.println(datagramSocket.getLocalSocketAddress());
         answerSender.setSocketAddress(datagramSocket.getLocalSocketAddress());
         WorkerFactory workerFactory = new WorkerFactory();
-        Receiver receiver = new Receiver(collectionManager);
+        workerFactory.setStartId(collectionManager.getLastId());
+        Receiver receiver = new Receiver(collectionManager, answerSender, workerFactory);
         Invoker invoker = new Invoker(receiver);
         invoker.initMap();
         RequestAcceptor requestAcceptor = new RequestAcceptor(workerFactory, logger, invoker, answerSender);
-        requestAcceptor.acceptRequest(datagramSocket, datagramSocket.getLocalSocketAddress());
+        requestAcceptor.acceptRequest(datagramSocket);
         try {
             logger.info("Server started on address " + InetAddress.getLocalHost() + " port: " + port);
             System.out.println("Server started on address " + InetAddress.getLocalHost() + " port: " + port);
@@ -69,3 +68,4 @@ public class Main {
         }
     }
 }
+

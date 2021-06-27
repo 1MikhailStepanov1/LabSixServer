@@ -1,6 +1,8 @@
 package data;
 
-public enum Position {
+import java.io.Serializable;
+
+public enum Position implements Serializable {
     MANAGER,
     LABORER,
     LEAD_DEVELOPER,

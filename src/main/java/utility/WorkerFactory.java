@@ -11,7 +11,6 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
-import java.util.Scanner;
 
 
 /**
@@ -19,9 +18,6 @@ import java.util.Scanner;
  */
 public class WorkerFactory {
     private Long id;
-    public Long getId() {
-        return id;
-    }
     private Object loadObject;
 
     public WorkerFactory() {
@@ -32,6 +28,17 @@ public class WorkerFactory {
     }
     public Object getLoadObject(){
         return loadObject;
+    }
+    public Long getId() {
+        return id;
+    }
+
+    /**
+     * Set new start point for id counter
+     * @param id1 - indicated start point for id counter
+     */
+    public void setStartId(long id1) {
+        id = id1;
     }
 
     /**
@@ -88,11 +95,4 @@ public class WorkerFactory {
     }
 
 
-    /**
-     * Set new start point for id counter
-     * @param id1 - indicated start point for id counter
-     */
-    public void setStartId(long id1) {
-        id = id1;
-    }
 }

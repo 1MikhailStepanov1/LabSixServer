@@ -1,7 +1,10 @@
 package data;
 
 
-public class Coordinates {
+import java.io.Serializable;
+
+public class Coordinates implements Serializable {
+    private static final long serialVersionUID = 32L;
     private long x; //Максимальное значение поля: 768
     private Integer y; //Поле не может быть null
 

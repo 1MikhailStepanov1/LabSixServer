@@ -1,7 +1,10 @@
 package data;
 
 
-public class Person {
+import java.io.Serializable;
+
+public class Person implements Serializable {
+    private static final long serialVersionUID = 32L;
     private Long height; //Поле может быть null, Значение поля должно быть больше 0
     private Integer weight; //Поле может быть null, Значение поля должно быть больше 0
 

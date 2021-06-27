@@ -33,6 +33,7 @@ public class Invoker {
         commands.put("group_counting_by_position", new GroupCountingByPosition(receiver));
         commands.put("count_less_than_start_date", new CountLessThanStartDate(receiver));
         commands.put("filter_greater_than_start_date", new FilterGreaterThanStartDate(receiver));
+        commands.put("validate_id", new ValidateId(receiver));
     }
 
     public void exe(String name, String arg) {

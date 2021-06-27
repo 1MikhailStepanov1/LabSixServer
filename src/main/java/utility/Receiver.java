@@ -1,46 +1,43 @@
 package utility;
 
+import com.sun.corba.se.spi.orbutil.threadpool.Work;
 import data.Worker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import request.AnswerSender;
 import request.RequestAcceptor;
 
-import java.util.Comparator;
 import java.util.LinkedList;
 
 public class Receiver {
     private static final Logger logger = LoggerFactory.getLogger(RequestAcceptor.class);
-    private CollectionManager collectionManager;
-    private final CollectionValidator collectionValidator = new CollectionValidator(collectionManager);
-    private final WorkerFactory workerFactory = new WorkerFactory();
-    private final AnswerSender answerSender = new AnswerSender(logger);
+    private final CollectionManager collectionManager;
+    private final WorkerFactory workerFactory;
+    private final AnswerSender answerSender;
 
-    public Receiver(CollectionManager collectionManager) {
+    public Receiver(CollectionManager collectionManager, AnswerSender answerSender, WorkerFactory workerFactory) {
         this.collectionManager = collectionManager;
+        this.answerSender = answerSender;
+        this.workerFactory = workerFactory;
 
     }
 
     public void add() {
         Worker worker = (Worker) workerFactory.getLoadObject();
-        if (CollectionValidator.validateObject(worker)) {
-            collectionManager.add(worker);
-            answerSender.addToAnswer(true, "Worker was added to the collection.", null, null);
-        } else {
-            answerSender.addToAnswer(false, "Received worker haven't passed validation.", null, null);
-        }
+        worker.setId(workerFactory.getId() + 1);
+        workerFactory.setStartId(worker.getId());
+        collectionManager.add(worker);
+        answerSender.addToAnswer(true, "Worker was added to the collection.", null, null);
         logger.info("Result of command \"add\" has been sent to client.");
         answerSender.sendAnswer();
     }
 
     public void addIfMax() {
         Worker worker = (Worker) workerFactory.getLoadObject();
-        if (CollectionValidator.validateObject(worker)) {
-            collectionManager.addIfMax(worker);
-            answerSender.addToAnswer(true, "Worker was added to the collection.", null, null);
-        } else {
-            answerSender.addToAnswer(false, "Received worker haven't passed validation.", null, null);
-        }
+        worker.setId(workerFactory.getId() + 1);
+        workerFactory.setStartId(worker.getId());
+        collectionManager.addIfMax(worker);
+        answerSender.addToAnswer(true, "Worker was added to the collection.", null, null);
         logger.info("Result of command \"add_if_max\" has been sent to client.");
         answerSender.sendAnswer();
     }
@@ -53,7 +50,7 @@ public class Receiver {
     }
 
     public void countLessThanStartDate(String arg) {
-        Integer answer = collectionManager.countLessThanStartDate(arg);
+        Long answer = collectionManager.countLessThanStartDate(arg);
         answerSender.addToAnswer(true, "Suitable elements in the collection: ", answer, null);
         logger.info("Result of command \"count_less_than_start_date\" has been sent to client.");
         answerSender.sendAnswer();
@@ -61,7 +58,6 @@ public class Receiver {
 
     public void filterGreaterThanStartDate(String arg) {
         LinkedList<Worker> answer = collectionManager.filterGreaterThanStartDate(arg);
-        answer.sort(Comparator.comparing(Worker::getName));
         if (answer == null) {
             answerSender.addToAnswer(false, "Collection doesn't contains satisfying elements.", null, null);
         } else {
@@ -80,7 +76,7 @@ public class Receiver {
 
     public void info() {
         String answer = collectionManager.getInfo();
-        answerSender.addToAnswer(true, answer,null ,null);
+        answerSender.addToAnswer(true, answer, null, null);
         logger.info("Result of command \"info\" has been sent to client.");
         answerSender.sendAnswer();
     }
@@ -89,6 +85,7 @@ public class Receiver {
         long id;
         try {
             id = Long.parseLong(arg);
+            CollectionValidator collectionValidator = new CollectionValidator(collectionManager);
             if (collectionValidator.checkExistId(id)) {
                 collectionManager.removeById(id);
                 answerSender.addToAnswer(true, "Element with id " + id + " has been removed.", null, null);
@@ -104,14 +101,10 @@ public class Receiver {
 
     public void removeGreater() {
         Worker worker = (Worker) workerFactory.getLoadObject();
-        if (CollectionValidator.validateObject(worker)) {
-            if (collectionManager.removeGreater(worker)) {
-                answerSender.addToAnswer(true,"Elements have been removed.",null, null);
-            } else {
-                answerSender.addToAnswer(false, "There is no elements in collection which are greater than indicated one.", null, null);
-            }
+        if (collectionManager.removeGreater(worker)) {
+            answerSender.addToAnswer(true, "Elements have been removed.", null, null);
         } else {
-            answerSender.addToAnswer(false,"Received element don`t pass validation.", null, null);
+            answerSender.addToAnswer(false, "There is no elements in collection which are greater than indicated one.", null, null);
         }
         logger.info("Result of command \"remove_greater\" has been sent to client.");
         answerSender.sendAnswer();
@@ -119,21 +112,17 @@ public class Receiver {
 
     public void removeLower() {
         Worker worker = (Worker) workerFactory.getLoadObject();
-        if (CollectionValidator.validateObject(worker)) {
-            if (collectionManager.removeLower(worker)) {
-                answerSender.addToAnswer(true, "Elements have been removed.", null, null);
-            } else {
-                answerSender.addToAnswer(false,"There is no elements in collection which are greater than indicated one.", null, null);
-            }
+        if (collectionManager.removeLower(worker)) {
+            answerSender.addToAnswer(true, "Elements have been removed.", null, null);
         } else {
-            answerSender.addToAnswer(false,"Received element don`t pass validation.", null, null);
+            answerSender.addToAnswer(false, "There is no elements in collection which are greater than indicated one.", null, null);
         }
         logger.info("Result of command \"remove_lower\" has been sent to client.");
         answerSender.sendAnswer();
     }
 
     public void show() {
-        answerSender.addToAnswer(true, null, null, collectionManager.show());
+        answerSender.addToAnswer(true, "", null, collectionManager.show());
         logger.info("Result of command \"show\" has been sent to client.");
         answerSender.sendAnswer();
     }
@@ -143,20 +132,30 @@ public class Receiver {
         Worker worker = (Worker) workerFactory.getLoadObject();
         try {
             tempId = Long.parseLong(arg);
+            CollectionValidator collectionValidator = new CollectionValidator(collectionManager);
             if (collectionValidator.checkExistId(tempId)) {
-                if (CollectionValidator.validateObject(worker)) {
-                    collectionManager.update(tempId, worker);
-                    answerSender.addToAnswer(true, "Element has been updated.", null,null);
-                } else {
-                    answerSender.addToAnswer(false,"Received element don't pass validation.", null,null);
-                }
+                collectionManager.update(tempId, worker);
+                answerSender.addToAnswer(true, "Element has been updated.", null, null);
             } else {
-                answerSender.addToAnswer(false,"There is no elements with matched id in the collection.", null,null);
+                answerSender.addToAnswer(false, "There is no elements with matched id in the collection.", null, null);
             }
         } catch (NumberFormatException exception) {
-            answerSender.addToAnswer(false,"Command is incorrect.", null, null);
+            answerSender.addToAnswer(false, "Command is incorrect.", null, null);
         }
         logger.info("Result of command \"update\" has been sent to client.");
+        answerSender.sendAnswer();
+    }
+
+    public void validateId(String arg) {
+        Long tempId;
+        try {
+            tempId = Long.parseLong(arg);
+            CollectionValidator collectionValidator = new CollectionValidator(collectionManager);
+            answerSender.addToAnswer(collectionValidator.checkExistId(tempId), "", null, null);
+        } catch (NumberFormatException exception) {
+            answerSender.addToAnswer(false, "", null, null);
+        }
+        logger.info("Result of validation has been sent to client.");
         answerSender.sendAnswer();
     }
 }

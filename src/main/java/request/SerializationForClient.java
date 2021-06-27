@@ -8,14 +8,14 @@ import java.util.LinkedList;
 public class SerializationForClient implements Serializable {
     private boolean status;
     private String message;
-    private Integer count;
+    private Long count;
     private LinkedList<Worker> workers;
 
-    public SerializationForClient(boolean status, String message, Integer count, LinkedList<Worker> workers) {
-        this.status = status;
-        this.message = message;
-        this.count = count;
-        this.workers = workers;
+    public SerializationForClient(boolean st, String mes, Long co, LinkedList<Worker> w) {
+        setStatus(st);
+        setMessage(mes);
+        setCount(co);
+        setWorkers(w);
     }
 
     public boolean getStatus() {
@@ -26,7 +26,7 @@ public class SerializationForClient implements Serializable {
         return message;
     }
 
-    public Integer getCount() {
+    public Long getCount() {
         return count;
     }
     public LinkedList<Worker> getWorkers(){
@@ -37,7 +37,7 @@ public class SerializationForClient implements Serializable {
         this.workers = workers;
     }
 
-    public void setCount(Integer count) {
+    public void setCount(Long count) {
         this.count = count;
     }
 

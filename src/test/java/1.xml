@@ -2,22 +2,24 @@
 <collection>
     <worker>
         <id>1</id>
+        <name>Angel</name>
         <coordinates>
-            <coordinateX>767</coordinateX>
-            <coordinateY>505</coordinateY>
+            <coordinateX>521</coordinateX>
+            <coordinateY>54</coordinateY>
         </coordinates>
         <creationDate>2020-01-12T11:30:52+03:00</creationDate>
-        <salary>0.5</salary>
-        <startDate>2020-12-11T11:50:20+03:00</startDate>
+        <salary>2555.0</salary>
+        <startDate>1212-12-12T12:12:12+03:00</startDate>
         <endDate>null</endDate>
-        <position>BAKER</position>
+        <position>null</position>
         <person>
-            <height>193</height>
-            <weight>85</weight>
+            <height>12</height>
+            <weight>12</weight>
         </person>
     </worker>
     <worker>
         <id>2</id>
+        <name>Vasya</name>
         <coordinates>
             <coordinateX>555</coordinateX>
             <coordinateY>9229</coordinateY>
@@ -34,18 +36,19 @@
     </worker>
     <worker>
         <id>3</id>
+        <name>Evgen</name>
         <coordinates>
-            <coordinateX>555</coordinateX>
-            <coordinateY>666</coordinateY>
+            <coordinateX>333</coordinateX>
+            <coordinateY>222</coordinateY>
         </coordinates>
-        <creationDate>2021-03-29T13:21:17.025+03:00[Europe/Moscow]</creationDate>
-        <salary>35000.0</salary>
-        <startDate>2020-12-12T11:50:30+03:00</startDate>
-        <endDate>2021-12-12T11:52:30+03:00</endDate>
+        <creationDate>2021-10-12T11:30:52+03:00</creationDate>
+        <salary>0.5</salary>
+        <startDate>2021-10-12T11:50:20+03:00</startDate>
+        <endDate>null</endDate>
         <position>MANAGER</position>
         <person>
-            <height>184</height>
-            <weight>75</weight>
+            <height>88</height>
+            <weight>5</weight>
         </person>
     </worker>
 </collection>

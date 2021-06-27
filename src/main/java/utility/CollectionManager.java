@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 public class CollectionManager {
     private LinkedList<Worker> collection = new LinkedList<>();
     private boolean ExeDone;
-    private String path;
     private final ZonedDateTime InitTime = ZonedDateTime.now();
 
     public CollectionManager() {
@@ -51,7 +50,7 @@ public class CollectionManager {
         }
     }
 
-    public Integer countLessThanStartDate(String arg) {
+    public Long countLessThanStartDate(String arg) {
         ZonedDateTime tempTime = null;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.uuuu H:mm:ss z");
         try {
@@ -59,12 +58,12 @@ public class CollectionManager {
         } catch (DateTimeParseException exception) {
             System.out.println(exception.getMessage());
         }
-        ArrayList<Worker> tempCollection = null;
-        Integer result;
+        ArrayList<Worker> tempCollection;
+        Long result;
         if (collection.size() > 0) {
             ZonedDateTime finalTempTime = tempTime;
             tempCollection = collection.stream().filter((worker) -> worker.getStartDate().compareTo(finalTempTime) < 0).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
-            result = tempCollection.size();
+            result = (long) tempCollection.size();
         } else {
             result = null;
         }
@@ -83,18 +82,19 @@ public class CollectionManager {
         if (collection.size() > 0) {
             ZonedDateTime finalTempTime = tempTime;
             result = collection.stream().filter((worker) -> worker.getStartDate().compareTo(finalTempTime) > 0).collect(LinkedList::new, LinkedList::add, LinkedList::addAll);
+            result.sort(Comparator.comparing(Worker::getName));
             return result;
         }
         return result;
     }
 
     public String groupCountingByPosition() {
-        StringBuilder result = null;
+        String result = "";
         Map<data.Position, Long> answer = collection.stream().collect(Collectors.groupingBy(Worker::getPosition, Collectors.counting()));
         for (Map.Entry<Position, Long> entry : answer.entrySet()) {
-            result.append(entry.getKey().toString()).append(" - ").append(entry.getValue());
+            result += (entry.getKey().toString() + " - " + entry.getValue() + "\n");
         }
-        return result.toString();
+        return result;
     }
 
     public void removeById(Long id) {
@@ -141,26 +141,6 @@ public class CollectionManager {
         });
     }
 
-    /**
-     * @param id id of required worker
-     * @return worker with required id
-     */
-    public Worker getById(long id) {
-        for (Worker worker : collection) {
-            if (worker.getId() == id) {
-                return worker;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * @param worker worker class instance to be removed
-     */
-    public void remove(Worker worker) {
-        ExeDone = true;
-        collection.remove(worker);
-    }
 
     /**
      * Remove all elements from collection
@@ -190,9 +170,7 @@ public class CollectionManager {
         } else {
             State = "Collection hasn't been modified yet.";
         }
-        StringBuilder result = null;
-        result.append(Type).append(Init).append(Size).append(State);
-        return String.valueOf(result);
+        return Type + Init + Size + State   ;
     }
 
     /**
@@ -215,12 +193,14 @@ public class CollectionManager {
         collection.addAll(collectionFromFile);
     }
 
-    public void setPath(String path){
-        this.path = path;
+    public Long getLastId(){
+        Long lastId = 0L;
+        for (Worker w : collection){
+            if (w.getId() > lastId){
+                lastId = w.getId();
+            }
+        }
+        return lastId;
     }
-    public String getPath(){
-        return path;
-    }
-
 
 }

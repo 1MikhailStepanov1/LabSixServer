@@ -13,9 +13,8 @@ import java.util.LinkedList;
 
 public class AnswerSender {
     private final Logger logger;
-    private SerializationForClient answer = new SerializationForClient(false, null, null,null);
+    private SerializationForClient answer;
     private SocketAddress socketAddress;
-    private final DatagramSocket datagramSocket = null;
 
     public AnswerSender(Logger logger) {
         this.logger = logger;
@@ -25,11 +24,8 @@ public class AnswerSender {
         this.socketAddress = socketAddress;
     }
 
-    public void addToAnswer(boolean status, String message, Integer count, LinkedList<Worker> workers) {
-        answer.setStatus(status);
-        answer.setMessage(message);
-        answer.setCount(count);
-        answer.setWorkers(workers);
+    public void addToAnswer(boolean status, String message, Long count, LinkedList<Worker> workers) {
+        answer = new SerializationForClient(status, message, count, workers);
     }
 
 
@@ -37,7 +33,9 @@ public class AnswerSender {
         if (answer == null){
             return;
         }
+
         try {
+            DatagramSocket datagramSocket = new DatagramSocket();
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
             datagramSocket.connect(socketAddress);
@@ -48,6 +46,7 @@ public class AnswerSender {
             logger.info("Answer has been sent to " + datagramSocket.getRemoteSocketAddress());
         } catch (IOException exception) {
             logger.info("Failed sending answer." + exception.getMessage() + exception.getCause());
+            exception.printStackTrace();
         }
         answer = null;
     }
