@@ -29,11 +29,10 @@ public class AnswerSender {
     }
 
 
-    public void sendAnswer(){
-        if (answer == null){
+    public void sendAnswer() {
+        if (answer == null) {
             return;
         }
-
         try {
             DatagramSocket datagramSocket = new DatagramSocket();
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();

@@ -2,19 +2,19 @@
 <collection>
     <worker>
         <id>1</id>
-        <name>Angel</name>
+        <name>Angelina</name>
         <coordinates>
-            <coordinateX>521</coordinateX>
-            <coordinateY>54</coordinateY>
+            <coordinateX>98</coordinateX>
+            <coordinateY>64651</coordinateY>
         </coordinates>
         <creationDate>2020-01-12T11:30:52+03:00</creationDate>
-        <salary>2555.0</salary>
-        <startDate>1212-12-12T12:12:12+03:00</startDate>
+        <salary>6.15165161E8</salary>
+        <startDate>2022-12-12T12:12:12+03:00</startDate>
         <endDate>null</endDate>
         <position>null</position>
         <person>
-            <height>12</height>
-            <weight>12</weight>
+            <height>1951</height>
+            <weight>6516</weight>
         </person>
     </worker>
     <worker>

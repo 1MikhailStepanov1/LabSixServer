@@ -90,9 +90,15 @@ public class CollectionManager {
 
     public String groupCountingByPosition() {
         String result = "";
-        Map<data.Position, Long> answer = collection.stream().collect(Collectors.groupingBy(Worker::getPosition, Collectors.counting()));
-        for (Map.Entry<Position, Long> entry : answer.entrySet()) {
-            result += (entry.getKey().toString() + " - " + entry.getValue() + "\n");
+        Map<String, Long> answer = collection.stream().collect(Collectors.groupingBy(worker -> {
+            if (worker.getPosition() != null){
+                return worker.getPosition().toString();
+            } else return "";
+        } , Collectors.counting()));
+        for (Map.Entry<String, Long> entry : answer.entrySet()) {
+            if (!entry.getKey().equals("")) {
+                result += (entry.getKey() + " - " + entry.getValue() + "\n");
+            } else result += ("No position - " + entry.getValue() + "\n");
         }
         return result;
     }
